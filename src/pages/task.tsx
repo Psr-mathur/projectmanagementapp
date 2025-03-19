@@ -12,6 +12,6 @@ export default function Task() {
   console.log(tasks);
 
   return (
-    <div>Task</div>
+    <div className='btn btn-primary'>Task</div>
   )
 }
