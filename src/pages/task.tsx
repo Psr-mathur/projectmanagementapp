@@ -1,3 +1,5 @@
+import { TaskFilters } from '@/components/task-filters';
+import { TaskList } from '@/components/task-list';
 import { api } from '@/utils/api'
 import { useSession } from 'next-auth/react';
 import React from 'react'
@@ -12,6 +14,13 @@ export default function Task() {
   console.log(tasks);
 
   return (
-    <div className='btn btn-primary'>Task</div>
+    <div className='flex'>
+      <div>
+        <TaskFilters />
+      </div>
+      <div className='flex-1'>
+        <TaskList />
+      </div>
+    </div>
   )
 }
