@@ -1,14 +1,39 @@
+import { TagSchema } from '@/models/tags.model';
+import { TaskCreateSchema, TaskDeleteSchema, TaskUpdateSchema } from '@/models/task.model';
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "@/server/api/trpc";
-import { z } from "zod";
+import { z } from 'zod';
 
 export const taskRouter = createTRPCRouter({
-  getAllCreatedTasks: protectedProcedure.query(async ({ ctx }) => {
+  getAllCreatedTasks: protectedProcedure.input(TaskUpdateSchema.omit({ tags: true }).merge(z.object({ tags: z.array(TagSchema.pick({ id: true })).optional().default([]) }))).query(async ({ ctx, input }) => {
     const data = await ctx.db.task.findMany({
-      where: { createdByUserId: ctx.session.user.id },
+      where: {
+        createdByUserId: ctx.session.user.id,
+        AND: [
+          {
+            status: input.status,
+            priority: input.priority,
+            ...(input?.tags && input.tags.length > 0
+              ? {
+                tags: {
+                  some: {
+                    id: {
+                      in: input.tags.map((tag) => tag.id),
+                    },
+                  },
+                },
+              }
+              : {}),
+          }
+        ]
+      },
+      include: {
+        tags: true,
+        assignedToUser: true,
+        createdByUser: true,
+      },
     });
     return data ?? null;
   }),
@@ -21,34 +46,25 @@ export const taskRouter = createTRPCRouter({
   }),
 
   createTask: protectedProcedure
-    .input(
-      z.object({
-        title: z.string(),
-        description: z.string().optional(),
-        priority: z.string().default("medium"),
-        deadline: z.string().optional(),
-        createdByUserId: z.string(), // Ensure task is linked to a user
-      })
-    )
+    .input(TaskCreateSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.task.create({
         data: {
           title: input.title,
           description: input.description,
           priority: input.priority,
-          deadline: input.deadline ? new Date(input.deadline) : null,
-          createdByUserId: input.createdByUserId,
+          dueDate: input.dueDate,
+          createdByUserId: ctx.session.user.id,
+          status: input.status,
+          tags: {
+            connect: input.tags?.map((tag) => ({ id: tag.id })) ?? [],
+          },
         },
       })
     }),
 
-  updateTask: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        status: z.string(),
-      })
-    )
+  updateTask: protectedProcedure
+    .input(TaskUpdateSchema)
     .mutation(async ({ ctx, input }) => {
       return ctx.db.task.update({
         where: { id: input.id },
@@ -56,8 +72,8 @@ export const taskRouter = createTRPCRouter({
       });
     }),
 
-  deleteTask: publicProcedure
-    .input(z.object({ id: z.string() }))
+  deleteTask: protectedProcedure
+    .input(TaskDeleteSchema)
     .mutation(async ({ input, ctx }) => {
       return ctx.db.task.delete({ where: { id: input.id } });
     }),

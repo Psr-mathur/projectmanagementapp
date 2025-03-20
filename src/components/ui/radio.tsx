@@ -1,19 +1,23 @@
 import React from "react";
 
-type TProps = React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+type TProps = Omit<
+  React.DetailedHTMLProps<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    HTMLInputElement
+  >,
+  "value"
 > & {
-  label: string; // Label for the radio group
-  options: { label: string; value: string }[]; // Array of radio options
-  name: string; // Group name for radio buttons
-  error?: boolean; // To display an error state
-  message?: string; // Optional error or helper message
+  label: string;
+  options: { label: string; value: string }[];
+  name: string;
+  error?: boolean;
+  message?: string;
+  selectedValue?: string;
 };
 
-export function Radio({ label, options, name, error, message, ...props }: TProps) {
+export function Radio({ label, options, name, error, message, selectedValue, ...props }: TProps) {
   return (
-    <fieldset className="fieldset">
+    <fieldset className="fieldset w-full">
       <legend className="fieldset-legend">{label}</legend>
       <div className="space-y-2">
         {options.map((option, index) => (
@@ -23,6 +27,7 @@ export function Radio({ label, options, name, error, message, ...props }: TProps
               name={name}
               value={option.value}
               className="radio"
+              defaultChecked={option.value === selectedValue}
               {...props}
             />
             <span>{option.label}</span>

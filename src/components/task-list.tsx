@@ -1,55 +1,43 @@
-import { useState } from "react";
 import { TaskCard } from "./task-card";
+import { api } from '@/utils/api';
+import { useSession } from 'next-auth/react';
+import { AddTask } from './add-task';
+import { useSearchParams } from 'next/navigation';
+import { type TaskPriority, type TaskStatus } from '@prisma/client';
 
 export function TaskList() {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Homepage redesign",
-      description: "Update the homepage with new branding and improve mobile responsiveness",
-      status: "In Progress",
-      priority: "High",
-      dueDate: "Aug 15, 2023",
-      progress: 65,
-      assignee: {
-        id: "2",
-        name: "Sarah Smith",
-        avatar: "/placeholder-user.jpg",
-        initials: "SS",
-      },
-      tags: ["Design", "Frontend"],
-    },
-    {
-      id: 2,
-      title: "API integration",
-      description: "Connect the application with the payment gateway API",
-      status: "To Do",
-      priority: "Medium",
-      dueDate: "Aug 20, 2023",
-      progress: 0,
-      assignee: {
-        id: "3",
-        name: "Mike Johnson",
-        avatar: "/placeholder-user.jpg",
-        initials: "MJ",
-      },
-      tags: ["Backend", "Feature"],
-    },
-  ]);
+  const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const filters = {
+    searchQuery: searchParams.get("searchQuery") ?? "",
+    status: (searchParams.get("status") as TaskStatus) ?? "TODO",
+    priority: (searchParams.get("priority") as TaskPriority) ?? "MEDIUM",
+    tagsIds: searchParams.get("tags")?.split(",") ?? [],
+  }
+  const { data: tasks, isLoading } = api.task.getAllCreatedTasks.useQuery({
+    status: filters.status,
+    priority: filters.priority,
+    tags: filters.tagsIds.map((id) => ({ id: id }))
+  }, {
+    enabled: session !== null,
+  });
 
-  const handleStatusChange = (id: number, status: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id
-          ? { ...task, status, progress: status === "Completed" ? 100 : 50 }
-          : task
-      )
-    );
+  const handleStatusChange = (id: string, status: string) => {
+    // setTasks((prevTasks) =>
+    //   prevTasks.map((task) =>
+    //     task.id === id
+    //       ? { ...task, status, progress: status === "Completed" ? 100 : 50 }
+    //       : task
+    //   )
+    // );
   };
 
   return (
     <div className="space-y-4">
-      {tasks.map((task) => (
+      <div className='w-full flex justify-end'>
+        <AddTask />
+      </div>
+      {tasks?.map((task) => (
         <TaskCard
           key={task.id}
           task={task}

@@ -14,22 +14,44 @@ model User {
     updatedAt     DateTime @updatedAt
     email         String   @unique
     name          String?
+    avatar        String?
     password      String
     createdTasks  Task[]
     assignedTasks Task[]   @relation("AssignedTasks")
 }
 
+model Tags {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    tasks     Task[]
+}
+
+enum TaskStatus {
+    TODO
+    IN_PROGRESS
+    COMPLETED
+}
+
+enum TaskPriority {
+    LOW
+    MEDIUM
+    HIGH
+}
+
 model Task {
-    id               String    @id @default(uuid())
-    createdAt        DateTime  @default(now())
-    updatedAt        DateTime  @updatedAt
+    id               String       @id @default(uuid())
+    createdAt        DateTime     @default(now())
+    updatedAt        DateTime     @updatedAt
     title            String
     description      String?
-    status           String    @default("pending")
-    priority         String    @default("medium")
-    deadline         DateTime?
+    status           TaskStatus
+    priority         TaskPriority
+    dueDate          DateTime
+    tags             Tags[]
     assignedToUserId String?
-    assignedToUser   User?     @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
+    assignedToUser   User?        @relation("AssignedTasks", fields: [assignedToUserId], references: [id])
     createdByUserId  String
-    createdByUser    User      @relation(fields: [createdByUserId], references: [id])
+    createdByUser    User?        @relation(fields: [createdByUserId], references: [id])
 }

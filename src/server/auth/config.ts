@@ -54,7 +54,20 @@ export const authConfig: NextAuth.NextAuthOptions = {
   callbacks: {
     redirect({ baseUrl }) {
       return `${baseUrl}/dashboard`;
-    }
+    },
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+
   },
   session: { strategy: "jwt" },
   secret: process.env.AUTH_SECRET,

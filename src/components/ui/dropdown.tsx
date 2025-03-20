@@ -12,9 +12,9 @@ type TProps = React.DetailedHTMLProps<
 
 export function Dropdown({ label, options, error, message, ...props }: TProps) {
   return (
-    <fieldset className="fieldset">
+    <fieldset className="fieldset w-full">
       {label && <legend className="fieldset-legend">{label}</legend>}
-      <select className={`select ${error ? "select-error" : ""}`} {...props}>
+      <select className={`select w-full ${error ? "select-error" : ""}`} {...props}>
         <option value="" disabled>
           Select an option
         </option>

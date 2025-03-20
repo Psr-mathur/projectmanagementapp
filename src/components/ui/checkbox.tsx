@@ -23,9 +23,9 @@ export function CheckboxGroup({
   message,
 }: TProps) {
   return (
-    <fieldset className="fieldset">
+    <fieldset className="fieldset w-full">
       <legend className="fieldset-legend">{label}</legend>
-      <div className="space-y-2">
+      <div className="space-y-2 w-full">
         {options.map((option, index) => (
           <label
             key={index}
@@ -34,7 +34,7 @@ export function CheckboxGroup({
             <input
               type="checkbox"
               value={option.value}
-              checked={selectedValues.includes(option.value)}
+              defaultChecked={selectedValues.includes(option.value)}
               onChange={(e) => onChange(option.value, e.target.checked)}
               className="checkbox"
             />

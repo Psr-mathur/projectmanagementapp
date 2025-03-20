@@ -7,11 +7,11 @@ type TProps = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement
 }
 export function Input({ label, error, message, ...props }: TProps) {
   return (
-    <fieldset className="fieldset">
+    <fieldset className="fieldset w-full">
       <legend className="fieldset-legend">{label}</legend>
       <input
         type="text"
-        className="input"
+        className="input w-full"
         placeholder="Type here"
         {...props}
       />
