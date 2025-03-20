@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from 'next-auth/react';
 import Link from "next/link";
 
 export default function AppSidebar() {
@@ -34,7 +35,7 @@ export default function AppSidebar() {
           </Link>
         </li>
         <li>
-          <button className="flex items-center gap-2">
+          <button className="flex items-center gap-2" onClick={() => void signOut()}>
             <span className="icon">🚪</span>
             Log out
           </button>
