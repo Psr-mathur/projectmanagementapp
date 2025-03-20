@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from './ui/input';
 import { Radio } from './ui/radio';
@@ -19,15 +19,25 @@ type TFilter = {
 export function TaskFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const searchQuery = searchParams.get("searchQuery") ?? ""
+  const status = (searchParams.get("status") as TaskStatus) ?? "TODO"
+  const priority = (searchParams.get("priority") as TaskPriority) ?? "MEDIUM"
+  const tagsIds = useMemo(() => searchParams.get("tags")?.split(",") ?? [], [searchParams])
   const [filterState, setFilterState] = useState<TFilter>({
-    searchQuery: searchParams.get("searchQuery") ?? "",
-    status: (searchParams.get("status") as TaskStatus) ?? "TODO",
-    priority: (searchParams.get("priority") as TaskPriority) ?? "MEDIUM",
-    tagsIds: searchParams.get("tags")?.split(",") ?? [],
+    searchQuery,
+    status,
+    priority,
+    tagsIds
   });
 
-  console.log(filterState);
+  useEffect(() => {
+    setFilterState({
+      searchQuery,
+      status,
+      priority,
+      tagsIds
+    })
+  }, [searchQuery, status, priority, tagsIds])
 
   const { data: session } = useSession();
   const { data: tags, isLoading } = api.tag.getAllTags.useQuery(undefined, {

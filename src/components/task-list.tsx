@@ -14,7 +14,7 @@ export function TaskList() {
     priority: (searchParams.get("priority") as TaskPriority) ?? "MEDIUM",
     tagsIds: searchParams.get("tags")?.split(",") ?? [],
   }
-  const { data: tasks, isLoading } = api.task.getAllCreatedTasks.useQuery({
+  const { data: tasks, isLoading, refetch } = api.task.getAllCreatedTasks.useQuery({
     status: filters.status,
     priority: filters.priority,
     tags: filters.tagsIds.map((id) => ({ id: id }))
@@ -22,14 +22,8 @@ export function TaskList() {
     enabled: session !== null,
   });
 
-  const handleStatusChange = (id: string, status: string) => {
-    // setTasks((prevTasks) =>
-    //   prevTasks.map((task) =>
-    //     task.id === id
-    //       ? { ...task, status, progress: status === "Completed" ? 100 : 50 }
-    //       : task
-    //   )
-    // );
+  const handleStatusChange = async (id: string, status: string) => {
+    await refetch();
   };
 
   return (
@@ -37,7 +31,9 @@ export function TaskList() {
       <div className='w-full flex justify-end'>
         <AddTask />
       </div>
-      {tasks?.map((task) => (
+      {isLoading ? <div className='h-96 w-full flex justify-center'>
+        <span className="loading loading-infinity loading-xl"></span>
+      </div> : tasks?.map((task) => (
         <TaskCard
           key={task.id}
           task={task}

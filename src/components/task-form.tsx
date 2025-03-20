@@ -37,8 +37,12 @@ export function TaskForm({ handleSubmit, data }: Props) {
 
   const handleAddTag = async (value: string) => {
     const newTag: TTagCreate = { name: value.trim() };
-    await tagCreateMutation.mutateAsync(newTag);
-    await refetchTags();
+    try {
+      await tagCreateMutation.mutateAsync(newTag);
+      await refetchTags();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
 

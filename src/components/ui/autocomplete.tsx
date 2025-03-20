@@ -63,11 +63,11 @@ export function MultiselectAutocomplete({
       //   console.error(error);
       // });
     }
-    const updatedSelection = [...selected, { label: value, value: value }];
-    setSelected(updatedSelection);
-    onSelectionChange(updatedSelection);
-    setQuery("");
-    setIsDropdownVisible(false); // Close dropdown after selection
+    // const updatedSelection = [...selected, { label: value, value: value }];
+    // setSelected(updatedSelection);
+    // onSelectionChange(updatedSelection);
+    // setQuery("");
+    // setIsDropdownVisible(false); // Close dropdown after selection
   };
 
   console.log("selected", selected);

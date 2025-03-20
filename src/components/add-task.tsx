@@ -20,8 +20,13 @@ export function AddTask() {
         <ModalContent className='bg-base-200'>
           <TaskForm
             handleSubmit={async (data) => {
-              await addTaskMutation.mutateAsync(data);
-              setIsOpen(false);
+              try {
+                await addTaskMutation.mutateAsync(data);
+              } catch (error) {
+                console.error(error);
+              } finally {
+                setIsOpen(false);
+              }
             }}
           />
         </ModalContent>
