@@ -68,7 +68,14 @@ export const taskRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return ctx.db.task.update({
         where: { id: input.id },
-        data: { status: input.status },
+        data: {
+          ...(input.title && { title: input.title }),
+          ...(input.description && { description: input.description }),
+          ...(input.priority && { priority: input.priority }),
+          ...(input.dueDate && { dueDate: input.dueDate }),
+          ...(input.status && { status: input.status }),
+          ...(input.tags && { tags: { set: input.tags.map((tag) => ({ id: tag.id })) } }),
+        },
       });
     }),
 

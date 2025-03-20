@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Dropdown } from './ui/dropdown';
 import { type TaskStatus, type Tags, type Task, type User } from '@prisma/client';
 import { api } from '@/utils/api';
+import { EditTask } from './edit-task';
 
 type TaskCardProps = {
   task: Task & {
@@ -91,7 +92,9 @@ export function TaskCard({ task, onStatusChange }: TaskCardProps) {
                 className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
               >
                 <li>
-                  <a>Edit</a>
+                  <EditTask
+                    data={task}
+                  />
                 </li>
                 <li>
                   <a className="text-red-500">Delete</a>

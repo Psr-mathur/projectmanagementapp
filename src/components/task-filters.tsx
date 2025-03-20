@@ -36,11 +36,28 @@ export function TaskFilters() {
 
   // Apply filters by updating URL params
   const applyFilters = () => {
+    console.log(filterState);
     const params = new URLSearchParams();
-    if (filterState.searchQuery) params.set("searchQuery", filterState.searchQuery);
-    if (filterState.status) params.set("status", filterState.status);
-    if (filterState.priority) params.set("priority", filterState.priority);
-    if (filterState.tagsIds.length > 0) params.set("tags", filterState.tagsIds.join(","));
+    if (filterState.searchQuery) {
+      params.set("searchQuery", filterState.searchQuery);
+    } else {
+      params.delete("searchQuery");
+    }
+    if (filterState.status) {
+      params.set("status", filterState.status);
+    } else {
+      params.delete("status");
+    }
+    if (filterState.priority) {
+      params.set("priority", filterState.priority);
+    } else {
+      params.delete("priority");
+    }
+    if (filterState.tagsIds.length > 0) {
+      params.set("tags", filterState.tagsIds.join(","));
+    } else {
+      params.delete("tags");
+    }
 
     router.replace(`?${params.toString()}`);
   };
@@ -86,8 +103,12 @@ export function TaskFilters() {
           label="Tags"
           options={tags?.map((tag) => ({ label: tag.name, value: tag.id })) ?? []}
           selectedValues={filterState.tagsIds}
-          onChange={(value) => {
-            setFilterState({ ...filterState, tagsIds: [...filterState.tagsIds, value.toString()] });
+          onChange={(value, checked) => {
+            if (checked) {
+              setFilterState({ ...filterState, tagsIds: [...filterState.tagsIds, value.toString()] });
+            } else {
+              setFilterState({ ...filterState, tagsIds: filterState.tagsIds.filter((id) => id !== value) });
+            }
           }}
         />
 

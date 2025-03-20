@@ -37,6 +37,6 @@ export const TaskSchema = z.object({
 export const TaskCreateSchema = TaskSchema.omit({ id: true, createdAt: true, updatedAt: true, createdByUserId: true, tags: true }).merge(z.object({ tags: z.array(TagSchema.pick({ name: true, id: true })) }));
 export type TTaskCreate = z.infer<typeof TaskCreateSchema>;
 
-export const TaskUpdateSchema = TaskSchema.partial().omit({ createdAt: true, updatedAt: true, createdByUserId: true });
+export const TaskUpdateSchema = TaskSchema.partial().omit({ createdAt: true, updatedAt: true, createdByUserId: true, tags: true }).merge(z.object({ tags: z.array(TagSchema.pick({ id: true, name: true })).optional() }));
 
 export const TaskDeleteSchema = TaskSchema.pick({ id: true });
