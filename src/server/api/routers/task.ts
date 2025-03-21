@@ -55,6 +55,7 @@ export const taskRouter = createTRPCRouter({
           priority: input.priority,
           dueDate: input.dueDate,
           createdByUserId: ctx.session.user.id,
+          assignedToUserId: input.assignedToUserId,
           status: input.status,
           tags: {
             connect: input.tags?.map((tag) => ({ id: tag.id })) ?? [],
@@ -74,6 +75,7 @@ export const taskRouter = createTRPCRouter({
           ...(input.priority && { priority: input.priority }),
           ...(input.dueDate && { dueDate: input.dueDate }),
           ...(input.status && { status: input.status }),
+          ...(input.assignedToUserId && { assignedToUserId: input.assignedToUserId }),
           ...(input.tags && { tags: { set: input.tags.map((tag) => ({ id: tag.id })) } }),
         },
       });

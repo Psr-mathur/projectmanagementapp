@@ -21,7 +21,12 @@ export function AddTask() {
           <TaskForm
             handleSubmit={async (data) => {
               try {
-                await addTaskMutation.mutateAsync(data);
+                const queryClient = api.useContext();
+                await addTaskMutation.mutateAsync(data, {
+                  onSuccess: () => {
+                    queryClient.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));
+                  }
+                });
               } catch (error) {
                 console.error(error);
               } finally {

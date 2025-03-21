@@ -55,17 +55,22 @@ const getPriorityColor = (priority: Task["priority"]) => {
 export function TaskCard({ task, onStatusChange }: TaskCardProps) {
 
   const updateTaskMutation = api.task.updateTask.useMutation();
+  const trpcContext = api.useContext();
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onStatusChange(task.id, e.target.value);
     updateTaskMutation.mutate({
       id: task.id,
       status: e.target.value as TaskStatus
+    }, {
+      onSuccess: () => {
+        trpcContext.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));
+      }
     });
   };
 
   return (
-    <div className="card bg-base-100 shadow-md border-rose-50 border-2">
+    <div className="card bg-base-100 shadow-md border-rose-50 border-2 my-2">
       {/* Card Header */}
       <div className="card-body">
         <div className="flex justify-between items-start">
@@ -146,8 +151,8 @@ export function TaskCard({ task, onStatusChange }: TaskCardProps) {
           })}
         </div>
         <div className="flex items-center gap-2">
-          <span>Assigned to:</span>
-          <div className="avatar">
+          <span>Assigned to: <strong>{task.assignedToUser?.name ?? task.assignedToUser?.email ?? "N/A"}</strong></span>
+          {/* <div className="avatar">
             <div className="w-8 rounded-full">
               <Image
                 src={task.assignedToUser?.avatar ?? "/placeholder-user.jpg"}
@@ -157,7 +162,7 @@ export function TaskCard({ task, onStatusChange }: TaskCardProps) {
                 className="rounded-full"
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

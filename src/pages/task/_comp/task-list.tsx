@@ -31,15 +31,19 @@ export function TaskList() {
       <div className='w-full flex justify-end'>
         <AddTask />
       </div>
-      {isLoading ? <div className='h-96 w-full flex justify-center'>
-        <span className="loading loading-infinity loading-xl"></span>
-      </div> : tasks?.map((task) => (
-        <TaskCard
-          key={task.id}
-          task={task}
-          onStatusChange={handleStatusChange}
-        />
-      ))}
+      <div className='h-[90vh] overflow-scroll' style={{
+        scrollbarWidth: "none"
+      }}>
+        {isLoading ? <div className='h-96 w-full flex justify-center'>
+          <span className="loading loading-infinity loading-xl"></span>
+        </div> : tasks?.map((task) => (
+          <TaskCard
+            key={task.id}
+            task={task}
+            onStatusChange={handleStatusChange}
+          />
+        ))}
+      </div>
     </div>
   );
 }

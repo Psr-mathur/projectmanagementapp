@@ -9,6 +9,7 @@ import { type TTagCreate } from '@/models/tags.model';
 import { api } from '@/utils/api';
 import { useSession } from 'next-auth/react';
 import { Textarea } from '@/components/ui/textarea';
+import { DayPicker } from 'react-day-picker';
 
 type Props = {
   handleSubmit?: (formState: TTaskCreate) => Promise<void>
@@ -21,6 +22,10 @@ export function TaskForm({ handleSubmit, data }: Props) {
     enabled: session !== null,
   });
 
+  const { data: users, refetch: refetchUsers } = api.user.getAllUsers.useQuery(undefined, {
+    enabled: session !== null
+  })
+
   const [formState, setFormState] = useState<TTaskCreate>({
     title: "",
     description: "",
@@ -28,6 +33,7 @@ export function TaskForm({ handleSubmit, data }: Props) {
     priority: "MEDIUM",
     tags: [],
     dueDate: new Date(),
+    assignedToUserId: ""
   });
 
   useEffect(() => {
@@ -109,6 +115,22 @@ export function TaskForm({ handleSubmit, data }: Props) {
             selectedValues={formState.tags.map((tag) => ({ label: tag.name, value: tag.id }))}
             onSelectionChange={(newTags) => setFormState({ ...formState, tags: newTags.map((newTag) => ({ name: newTag.value, id: newTag.value })) })}
             handleNewOption={handleAddTag}
+          />
+
+          {/* Due Date */}
+          <Input
+            label="Due Date"
+            type="date"
+            value={formState.dueDate.toISOString().split("T")[0]}
+            onChange={(e) => setFormState({ ...formState, dueDate: new Date(e.target.value) })}
+          />
+
+          {/* Assigned To */}
+          <Dropdown
+            label="Assigned To"
+            options={users?.filter(d => d.id !== session?.user?.id).map((user) => ({ label: user.email, value: user.id })) ?? []}
+            value={formState.assignedToUserId}
+            onChange={(e) => setFormState({ ...formState, assignedToUserId: e.target.value })}
           />
 
           {/* Submit Button */}

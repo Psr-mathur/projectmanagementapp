@@ -9,7 +9,7 @@ export const UserSchema = z.object({
     .email({ message: "'email' must be a valid email address" })
     .nonempty({ message: "'email' is required" }),
   name: z.string().optional(),
-  avatar: z.string().url({ message: "'avatar' must be a valid URL" }).optional(),
+  avatar: z.string().optional(),
   password: z
     .string()
     .min(8, { message: "'password' must be at least 8 characters long" })

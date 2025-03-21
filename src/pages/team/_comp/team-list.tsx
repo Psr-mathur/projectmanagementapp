@@ -4,45 +4,53 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image'
 import React from 'react'
 import { EditUser } from './edit-user';
-import { AddUser } from './add-user';
 
 export function TeamList() {
   const { data: session } = useSession();
   const { data: users, isLoading } = api.user.getAllUsers.useQuery(undefined, {
-    enabled: session !== null
+    enabled: session !== null,
   });
 
+  if (!session) {
+    return (
+      <div className="h-96 flex justify-center items-center">
+        <span>Loading session...</span>
+      </div>
+    );
+  }
+
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <div className="overflow-x-auto w-full">
         <table className="table">
-          {/* head */}
-          <thead>
-            <tr>
-              <th>
-                Sr No
-              </th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Password</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          {!isLoading && (
+            <thead>
+              <tr>
+                <th>Sr No</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+          )}
           <tbody>
-            {
-              isLoading ? <div className='h-96 w-full flex justify-center'>
-                <span className="loading loading-infinity loading-xl"></span>
-              </div>
-                :
-                users?.map((user, index) => (
-                  <UserRow key={user.id} srNo={index + 1} user={user} />
-                ))
-            }
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="h-96 w-full flex justify-center">
+                  <span className="loading loading-infinity loading-xl"></span>
+                </td>
+              </tr>
+            ) : (
+              users?.map((user, index) => (
+                <UserRow key={user.id} srNo={index + 1} user={user} />
+              ))
+            )}
           </tbody>
         </table>
       </div>
     </div>
-  )
+  );
 }
 
 type UserRowProps = {
