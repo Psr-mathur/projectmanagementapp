@@ -8,6 +8,7 @@ export function AddTask() {
   const [isOpen, setIsOpen] = useState(false);
 
   const addTaskMutation = api.task.createTask.useMutation();
+  const queryClient = api.useContext();
 
   return (
     <div>
@@ -21,7 +22,6 @@ export function AddTask() {
           <TaskForm
             handleSubmit={async (data) => {
               try {
-                const queryClient = api.useContext();
                 await addTaskMutation.mutateAsync(data, {
                   onSuccess: () => {
                     queryClient.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));

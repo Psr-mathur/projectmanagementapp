@@ -11,6 +11,7 @@ export function EditUser({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const updateTaskMutation = api.task.updateTask.useMutation();
+  const trpcContext = api.useContext();
 
   return (
     <div>
@@ -26,6 +27,10 @@ export function EditUser({ data }: Props) {
               await updateTaskMutation.mutateAsync({
                 id: data.id,
                 ...d
+              }, {
+                onSuccess: () => {
+                  trpcContext.user.getAllUsers.invalidate().catch((error) => console.error(error));
+                }
               });
               setIsOpen(false);
             }}

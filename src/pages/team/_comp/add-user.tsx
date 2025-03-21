@@ -8,6 +8,7 @@ export function AddUser() {
   const [isOpen, setIsOpen] = useState(false);
 
   const addUserMutation = api.user.createUser.useMutation();
+  const trpcContext = api.useContext();
 
   return (
     <div>
@@ -21,7 +22,11 @@ export function AddUser() {
           <UserForm
             handleSubmit={async (data) => {
               try {
-                await addUserMutation.mutateAsync(data);
+                await addUserMutation.mutateAsync(data, {
+                  onSuccess: () => {
+                    trpcContext.user.getAllUsers.invalidate().catch((error) => console.error(error));
+                  }
+                });
               } catch (error) {
                 console.error(error);
               } finally {

@@ -14,6 +14,7 @@ export function EditTask({ data }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const updateTaskMutation = api.task.updateTask.useMutation();
+  const trpcContext = api.useContext();
 
   return (
     <div>
@@ -26,7 +27,11 @@ export function EditTask({ data }: Props) {
         <ModalContent className='bg-base-200'>
           <TaskForm
             handleSubmit={async (data) => {
-              await updateTaskMutation.mutateAsync(data);
+              await updateTaskMutation.mutateAsync(data, {
+                onSuccess: () => {
+                  trpcContext.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));
+                }
+              });
               setIsOpen(false);
             }}
             data={{
