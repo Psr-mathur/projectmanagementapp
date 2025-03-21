@@ -1,27 +1,27 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button';
 import { Modal, ModalContent, ModalHeader } from '@/components/ui/modal';
-import { TaskForm } from './task-form';
 import { api } from '@/utils/api';
+import { UserForm } from './user-form';
 
-export function AddTask() {
+export function AddUser() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const addTaskMutation = api.task.createTask.useMutation();
+  const addUserMutation = api.user.createUser.useMutation();
 
   return (
     <div>
       <Button variant="primary" onClick={() => setIsOpen(true)}>
-        Add Task
+        Add User
       </Button>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <ModalHeader className='bg-base-100' title="Add Task" />
+        <ModalHeader className='bg-base-100' title="Add User" />
         <ModalContent className='bg-base-200'>
-          <TaskForm
+          <UserForm
             handleSubmit={async (data) => {
               try {
-                await addTaskMutation.mutateAsync(data);
+                await addUserMutation.mutateAsync(data);
               } catch (error) {
                 console.error(error);
               } finally {

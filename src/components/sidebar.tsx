@@ -29,9 +29,9 @@ export default function AppSidebar() {
           </Link>
         </li>
         <li>
-          <Link href="/profile" className="flex items-center gap-2">
+          <Link href="/account" className="flex items-center gap-2">
             <span className="icon">👤</span>
-            Profile
+            Account
           </Link>
         </li>
         <li>
