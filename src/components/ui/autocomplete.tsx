@@ -1,5 +1,5 @@
 import { XIcon } from 'lucide-react';
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type Option = { label: string; value: string };
 
@@ -28,6 +28,10 @@ export function MultiselectAutocomplete({
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [selected, setSelected] = useState<Option[]>(selectedValues);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setSelected(selectedValues)
+  }, [selectedValues]);
 
   const filteredOptions = options.filter(
     (option) =>
@@ -70,7 +74,6 @@ export function MultiselectAutocomplete({
     // setIsDropdownVisible(false); // Close dropdown after selection
   };
 
-  console.log("selected", selected);
 
   return (
     <fieldset className="fieldset">

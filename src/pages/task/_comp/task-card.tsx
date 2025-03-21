@@ -89,22 +89,7 @@ export function TaskCard({ task, onStatusChange }: TaskCardProps) {
               disabled={updateTaskMutation.isPending}
             />
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost btn-sm">
-                ⋮
-              </label>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
-              >
-                <li>
-                  <EditTask
-                    data={task}
-                  />
-                </li>
-                <li>
-                  <a className="text-red-500">Delete</a>
-                </li>
-              </ul>
+              <EditTask data={task} />
             </div>
           </div>
         </div>

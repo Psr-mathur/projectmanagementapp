@@ -3,6 +3,7 @@ import { Modal, ModalContent, ModalHeader } from '@/components/ui/modal';
 import { TaskForm } from './task-form';
 import { api } from '@/utils/api';
 import { type Tags, type User, type Task } from '@prisma/client';
+import { Edit2Icon } from 'lucide-react';
 type Props = {
   data: Task & {
     assignedToUser?: User | null,
@@ -18,9 +19,9 @@ export function EditTask({ data }: Props) {
 
   return (
     <div>
-      <p onClick={() => setIsOpen(true)}>
-        Edit Task
-      </p>
+      <button className="btn btn-ghost btn-xs" onClick={() => setIsOpen(true)}>
+        <Edit2Icon />
+      </button>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
         <ModalHeader className='bg-base-100' title="Edit Task" />
