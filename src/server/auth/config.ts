@@ -52,8 +52,10 @@ export const authConfig: NextAuth.NextAuthOptions = {
     }),
   ],
   callbacks: {
-    redirect({ baseUrl }) {
-      return `${baseUrl}/dashboard`;
+    redirect: async ({ url, baseUrl }) => {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
     jwt: async ({ token, user }) => {
       if (user) {

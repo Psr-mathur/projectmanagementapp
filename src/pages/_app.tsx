@@ -7,6 +7,7 @@ import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
 import Layout from '@/components/app-layout';
+import { AuthWrapper } from '@/components/auth-wrapper';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -16,7 +17,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <div className={GeistSans.className}>
         <Layout>
-          <Component {...pageProps} />
+          <AuthWrapper>
+            <Component {...pageProps} />
+          </AuthWrapper>
         </Layout>
       </div>
     </SessionProvider>
