@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Dropdown } from "./ui/dropdown";
-import { Button } from "./ui/button";
-import { MultiselectAutocomplete } from './ui/autocomplete';
+import { Input } from "@/components/ui/input";
+import { Dropdown } from "@/components/ui/dropdown";
+import { Button } from "@/components/ui/button";
+import { MultiselectAutocomplete } from '@/components/ui/autocomplete';
 import { type TTaskCreate } from '@/models/task.model';
 import { type TaskPriority, type TaskStatus } from '@prisma/client';
 import { type TTagCreate } from '@/models/tags.model';
 import { api } from '@/utils/api';
 import { useSession } from 'next-auth/react';
-import { Textarea } from './ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 
 type Props = {
   handleSubmit?: (formState: TTaskCreate) => Promise<void>

@@ -1,5 +1,5 @@
-import { TaskFilters } from '@/components/task-filters';
-import { TaskList } from '@/components/task-list';
+import { TaskFilters } from '@/pages/task/_comp/task-filters';
+import { TaskList } from '@/pages/task/_comp/task-list';
 import React from 'react'
 
 export default function Task() {

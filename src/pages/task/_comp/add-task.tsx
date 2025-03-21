@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button } from './ui/button';
-import { Modal, ModalContent, ModalFooter, ModalHeader } from './ui/modal';
+import { Button } from '@/components/ui/button';
+import { Modal, ModalContent, ModalHeader } from '@/components/ui/modal';
 import { TaskForm } from './task-form';
 import { api } from '@/utils/api';
 

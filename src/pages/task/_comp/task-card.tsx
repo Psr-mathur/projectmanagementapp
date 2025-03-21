@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Dropdown } from './ui/dropdown';
+import { Dropdown } from '@/components/ui/dropdown';
 import { type TaskStatus, type Tags, type Task, type User } from '@prisma/client';
 import { api } from '@/utils/api';
 import { EditTask } from './edit-task';
