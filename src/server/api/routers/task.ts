@@ -7,10 +7,13 @@ import {
 import { z } from 'zod';
 
 export const taskRouter = createTRPCRouter({
-  getAllCreatedTasks: protectedProcedure.input(TaskUpdateSchema.omit({ tags: true }).merge(z.object({ tags: z.array(TagSchema.pick({ id: true })).optional().default([]) }))).query(async ({ ctx, input }) => {
+  getAllTasks: protectedProcedure.input(TaskUpdateSchema.omit({ tags: true }).merge(z.object({ tags: z.array(TagSchema.pick({ id: true })).optional().default([]), searchQuery: z.string().optional() }))).query(async ({ ctx, input }) => {
     const data = await ctx.db.task.findMany({
       where: {
-        createdByUserId: ctx.session.user.id,
+        OR: [
+          { createdByUserId: ctx.session.user.id },
+          { assignedToUserId: ctx.session.user.id }
+        ],
         AND: [
           {
             status: input.status,

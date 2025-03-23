@@ -10,13 +10,14 @@ export function TaskList() {
   const searchParams = useSearchParams();
   const filters = {
     searchQuery: searchParams.get("searchQuery") ?? "",
-    status: (searchParams.get("status") as TaskStatus) ?? "TODO",
-    priority: (searchParams.get("priority") as TaskPriority) ?? "MEDIUM",
+    status: (searchParams.get("status") as TaskStatus) ?? "",
+    priority: ((searchParams.get("priority") && (searchParams.get("priority") === 'all')) ? "" : searchParams.get("priority")) as TaskPriority,
     tagsIds: searchParams.get("tags")?.split(",") ?? [],
   }
-  const { data: tasks, isLoading, refetch } = api.task.getAllCreatedTasks.useQuery({
-    status: filters.status,
-    priority: filters.priority,
+  const { data: tasks, isLoading, refetch } = api.task.getAllTasks.useQuery({
+    searchQuery: filters.searchQuery,
+    ...(filters.status && { status: filters.status }),
+    ...(filters.priority && { priority: filters.priority }),
     tags: filters.tagsIds.map((id) => ({ id: id }))
   }, {
     enabled: session !== null,

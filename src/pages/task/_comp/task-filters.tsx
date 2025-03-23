@@ -20,8 +20,8 @@ export function TaskFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("searchQuery") ?? ""
-  const status = (searchParams.get("status") as TaskStatus) ?? "TODO"
-  const priority = (searchParams.get("priority") as TaskPriority) ?? "MEDIUM"
+  const status = (searchParams.get("status") as TaskStatus) ?? ""
+  const priority = (searchParams.get("priority") as TaskPriority) ?? "all"
   const tagsIds = useMemo(() => searchParams.get("tags")?.split(",") ?? [], [searchParams])
   const [filterState, setFilterState] = useState<TFilter>({
     searchQuery,
@@ -49,17 +49,17 @@ export function TaskFilters() {
     console.log(filterState);
     const params = new URLSearchParams();
     if (filterState.searchQuery) {
-      params.set("searchQuery", filterState.searchQuery);
+      params.set("searchQuery", filterState.searchQuery.trim());
     } else {
       params.delete("searchQuery");
     }
     if (filterState.status) {
-      params.set("status", filterState.status);
+      params.set("status", filterState.status.trim());
     } else {
       params.delete("status");
     }
     if (filterState.priority) {
-      params.set("priority", filterState.priority);
+      params.set("priority", filterState.priority.trim());
     } else {
       params.delete("priority");
     }
@@ -87,10 +87,11 @@ export function TaskFilters() {
         <Radio
           label="Status"
           options={[
+            { label: "All", value: "" },
             { label: "To Do", value: "TODO" },
             { label: "In Progress", value: "IN_PROGRESS" },
             { label: "Completed", value: "COMPLETED" },
-          ] as { label: string; value: TaskStatus }[]}
+          ]}
           name="status"
           onChange={(e) => setFilterState({ ...filterState, status: e.target.value as TaskStatus })}
           selectedValue={filterState.status}
@@ -100,6 +101,7 @@ export function TaskFilters() {
         <Dropdown
           label="Priority"
           options={[
+            { label: "All", value: "all" },
             { label: "High", value: "HIGH" },
             { label: "Medium", value: "MEDIUM" },
             { label: "Low", value: "LOW" },
