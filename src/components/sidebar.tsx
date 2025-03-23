@@ -1,7 +1,6 @@
-"use client";
-
 import { signOut } from 'next-auth/react';
 import Link from "next/link";
+import { Home, CheckSquare, Users, User, LogOut } from 'lucide-react';
 
 export default function AppSidebar() {
   return (
@@ -12,31 +11,31 @@ export default function AppSidebar() {
       <ul className='space-y-4'>
         <li>
           <Link href="/" className="flex items-center gap-2">
-            <span className="icon">🏠</span>
+            <Home className="w-5 h-5" /> {/* Lucide Home Icon */}
             Dashboard
           </Link>
         </li>
         <li>
           <Link href="/task" className="flex items-center gap-2">
-            <span className="icon">✅</span>
+            <CheckSquare className="w-5 h-5" /> {/* Lucide CheckSquare Icon */}
             Tasks
           </Link>
         </li>
         <li>
           <Link href="/team" className="flex items-center gap-2">
-            <span className="icon">👥</span>
+            <Users className="w-5 h-5" /> {/* Lucide Users Icon */}
             Team Management
           </Link>
         </li>
         <li>
           <Link href="/account" className="flex items-center gap-2">
-            <span className="icon">👤</span>
+            <User className="w-5 h-5" /> {/* Lucide User Icon */}
             Account
           </Link>
         </li>
         <li>
           <button className="flex items-center gap-2" onClick={() => void signOut()}>
-            <span className="icon">🚪</span>
+            <LogOut className="w-5 h-5" /> {/* Lucide LogOut Icon */}
             Log out
           </button>
         </li>
