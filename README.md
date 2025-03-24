@@ -10,6 +10,7 @@ This project management application is built using the **T3 stack** (Next.js, tR
 - Task management: Create, update, delete, assign tasks.
 - Tag management: Add and retrieve tags.
 - User management: Fetch user details and update profiles.
+- Team management: Add and retrieve members.
 
 ---
 
@@ -312,15 +313,25 @@ Sign out a user.
 3. Configure `.env` file:
    ```env
    DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-   NEXTAUTH_SECRET=your-secret-key
+   AUTH_SECRET=your-secret-key
    ```
 4. Run database migrations:
    ```sh
-   npx prisma migrate dev
+   npx prisma db push
    ```
 5. Start the development server:
    ```sh
    npm run dev
    ```
+
+## Future Enhancements
+
+- Implement Role-Based Access Control (RBAC) for different user permissions.
+
+- Integrate notifications for task assignments and due dates.
+
+- User Should add Profile Picture.
+
+- Support file attachments for tasks.
 
 ---
