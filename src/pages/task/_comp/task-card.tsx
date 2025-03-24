@@ -64,7 +64,7 @@ export function TaskCard({ task, onStatusChange }: TaskCardProps) {
       status: e.target.value as TaskStatus
     }, {
       onSuccess: () => {
-        trpcContext.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));
+        trpcContext.task.getAllTasks.invalidate().catch((error) => console.error(error));
       }
     });
   };

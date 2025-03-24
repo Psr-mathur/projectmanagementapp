@@ -24,7 +24,7 @@ export function AddTask() {
               try {
                 await addTaskMutation.mutateAsync(data, {
                   onSuccess: () => {
-                    queryClient.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));
+                    queryClient.task.getAllTasks.invalidate().catch((error) => console.error(error));
                   }
                 });
               } catch (error) {
