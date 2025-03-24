@@ -1,29 +1,337 @@
-# Create T3 App
+# Project Management App - API Documentation
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Overview
 
-## What's next? How do I make an app with this?
+This project management application is built using the **T3 stack** (Next.js, tRPC, Prisma, NextAuth, TypeScript, Tailwind CSS, and Supabase). The app allows users to create, assign, and manage tasks with tags, along with user profile management.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### Features
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- User authentication using **NextAuth** (email/password only).
+- Task management: Create, update, delete, assign tasks.
+- Tag management: Add and retrieve tags.
+- User management: Fetch user details and update profiles.
+- Team management: Add and retrieve members.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+---
 
-## Learn More
+## API Endpoints
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Task Routes
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+#### `GET /api/trpc/task.getAllTasks`
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Retrieve all tasks for the authenticated user (either created by or assigned to them).
 
-## How do I deploy this?
+##### Request Body:
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```json
+{
+  "status": "TaskStatus",
+  "priority": "TaskPriority",
+  "tags": [{ "id": "tagId" }],
+  "searchQuery": "string"
+}
+```
+
+##### Response:
+
+```json
+[
+  {
+    "id": "taskId",
+    "title": "Task Title",
+    "description": "Task Description",
+    "status": "TaskStatus",
+    "priority": "TaskPriority",
+    "dueDate": "DateTime",
+    "tags": [{ "id": "tagId", "name": "Tag Name" }],
+    "createdByUser": { "id": "userId", "name": "User Name" },
+    "assignedToUser": { "id": "userId", "name": "User Name" }
+  }
+]
+```
+
+#### `POST /api/trpc/task.createTask`
+
+Create a new task.
+
+##### Request Body:
+
+```json
+{
+  "title": "Task Title",
+  "description": "Task Description",
+  "priority": "TaskPriority",
+  "dueDate": "DateTime",
+  "assignedToUserId": "userId",
+  "status": "TaskStatus",
+  "tags": [{ "id": "tagId" }]
+}
+```
+
+##### Response:
+
+```json
+{
+  "id": "taskId",
+  "title": "Task Title"
+}
+```
+
+#### `PUT /api/trpc/task.updateTask`
+
+Update an existing task.
+
+##### Request Body:
+
+```json
+{
+  "id": "taskId",
+  "title": "Updated Title",
+  "description": "Updated Description",
+  "priority": "Updated Priority",
+  "dueDate": "Updated DateTime",
+  "status": "Updated Status",
+  "assignedToUserId": "New User Id",
+  "tags": [{ "id": "tagId" }]
+}
+```
+
+##### Response:
+
+```json
+{
+  "id": "taskId",
+  "title": "Updated Title"
+}
+```
+
+#### `DELETE /api/trpc/task.deleteTask`
+
+Delete a task.
+
+##### Request Body:
+
+```json
+{
+  "id": "taskId"
+}
+```
+
+##### Response:
+
+```json
+{
+  "success": true
+}
+```
+
+---
+
+### Tag Routes
+
+#### `GET /api/trpc/tag.getAllTags`
+
+Retrieve all available tags.
+
+##### Response:
+
+```json
+[{ "id": "tagId", "name": "Tag Name" }]
+```
+
+#### `POST /api/trpc/tag.createTag`
+
+Create a new tag.
+
+##### Request Body:
+
+```json
+{
+  "name": "New Tag Name"
+}
+```
+
+##### Response:
+
+```json
+{
+  "id": "tagId",
+  "name": "New Tag Name"
+}
+```
+
+---
+
+### User Routes
+
+#### `GET /api/trpc/user.getAllUsers`
+
+Retrieve all users.
+
+##### Response:
+
+```json
+[{ "id": "userId", "name": "User Name", "email": "user@example.com" }]
+```
+
+#### `GET /api/trpc/user.getUserById`
+
+Retrieve user details by ID.
+
+##### Request Body:
+
+```json
+{
+  "id": "userId"
+}
+```
+
+##### Response:
+
+```json
+{
+  "id": "userId",
+  "name": "User Name",
+  "email": "user@example.com",
+  "avatar": "avatarUrl"
+}
+```
+
+#### `POST /api/trpc/user.createUser`
+
+Create a new user.
+
+##### Request Body:
+
+```json
+{
+  "email": "user@example.com",
+  "name": "User Name",
+  "password": "securepassword",
+  "avatar": "avatarUrl"
+}
+```
+
+##### Response:
+
+```json
+{
+  "id": "userId",
+  "name": "User Name"
+}
+```
+
+#### `PUT /api/trpc/user.updateUser`
+
+Update user details.
+
+##### Request Body:
+
+```json
+{
+  "id": "userId",
+  "email": "updated@example.com",
+  "name": "Updated Name",
+  "avatar": "updatedAvatarUrl",
+  "password": "newpassword"
+}
+```
+
+##### Response:
+
+```json
+{
+  "id": "userId",
+  "name": "Updated Name"
+}
+```
+
+---
+
+## Authentication
+
+Authentication is handled using **NextAuth.js** with email/password authentication.
+
+### `POST /api/auth/signin`
+
+Sign in a user.
+
+##### Request Body:
+
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword"
+}
+```
+
+##### Response:
+
+```json
+{
+  "user": {
+    "id": "userId",
+    "name": "User Name",
+    "email": "user@example.com"
+  },
+  "token": "JWT_TOKEN"
+}
+```
+
+### `POST /api/auth/signout`
+
+Sign out a user.
+
+##### Response:
+
+```json
+{
+  "success": true
+}
+```
+
+---
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js (>= 16.x)
+
+### Installation
+
+1. Clone the repository:
+   ```sh
+   git clone git@github.com:Psr-mathur/projectmanagementapp.git
+   cd projectmanagementapp
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Configure `.env` file:
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+   AUTH_SECRET=your-secret-key
+   ```
+4. Run database migrations:
+   ```sh
+   npx prisma db push
+   ```
+5. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+## Future Enhancements
+
+- Implement Role-Based Access Control (RBAC) for different user permissions.
+
+- Integrate notifications for task assignments and due dates.
+
+- User Should add Profile Picture.
+
+- Support file attachments for tasks.
+
+---
