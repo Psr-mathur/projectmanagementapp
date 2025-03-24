@@ -330,6 +330,8 @@ Sign out a user.
 
 - Integrate notifications for task assignments and due dates.
 
+- UI Improvement : Loading States, Error Handling, etc.
+
 - User Should add Profile Picture.
 
 - Support file attachments for tasks.
