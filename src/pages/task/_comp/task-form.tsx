@@ -113,7 +113,7 @@ export function TaskForm({ handleSubmit, data }: Props) {
             options={tags?.map((tag) => ({ label: tag.name, value: tag.id })) ?? []}
             placeholder="Select tags..."
             selectedValues={formState.tags.map((tag) => ({ label: tag.name, value: tag.id }))}
-            onSelectionChange={(newTags) => setFormState({ ...formState, tags: newTags.map((newTag) => ({ name: newTag.value, id: newTag.value })) })}
+            onSelectionChange={(newTags) => setFormState({ ...formState, tags: newTags.map((newTag) => ({ name: newTag.label, id: newTag.value })) })}
             handleNewOption={handleAddTag}
           />
 

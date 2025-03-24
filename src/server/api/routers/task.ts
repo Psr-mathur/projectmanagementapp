@@ -29,9 +29,16 @@ export const taskRouter = createTRPCRouter({
                 },
               }
               : {}),
+            ...(input.searchQuery && {
+              OR: [
+                { title: { contains: input.searchQuery, mode: "insensitive" } },
+                { description: { contains: input.searchQuery, mode: "insensitive" } },
+              ],
+            }),
           }
         ]
       },
+      orderBy: { createdAt: "desc" },
       include: {
         tags: true,
         assignedToUser: true,

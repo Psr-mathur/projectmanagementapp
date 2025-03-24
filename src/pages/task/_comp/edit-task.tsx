@@ -30,7 +30,7 @@ export function EditTask({ data }: Props) {
             handleSubmit={async (data) => {
               await updateTaskMutation.mutateAsync(data, {
                 onSuccess: () => {
-                  trpcContext.task.getAllCreatedTasks.invalidate().catch((error) => console.error(error));
+                  trpcContext.task.getAllTasks.invalidate().catch((error) => console.error(error));
                 }
               });
               setIsOpen(false);
