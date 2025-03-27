@@ -27,22 +27,18 @@ export function EditTask({ data }: Props) {
         <ModalHeader className='bg-base-100' title="Edit Task" />
         <ModalContent className='bg-base-200'>
           <TaskForm
-            handleSubmit={async (data) => {
-              await updateTaskMutation.mutateAsync(data, {
+            handleSubmit={async (d) => {
+              await updateTaskMutation.mutateAsync({
+                id: data.id,
+                ...d
+              }, {
                 onSuccess: () => {
                   trpcContext.task.getAllTasks.invalidate().catch((error) => console.error(error));
                 }
               });
               setIsOpen(false);
             }}
-            data={{
-              title: data.title,
-              description: data.description ?? undefined,
-              status: data.status,
-              priority: data.priority,
-              dueDate: data.dueDate,
-              tags: data.tags,
-            }}
+            data={data}
           />
         </ModalContent>
         {/* <ModalFooter>

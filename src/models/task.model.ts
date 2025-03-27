@@ -39,4 +39,6 @@ export type TTaskCreate = z.infer<typeof TaskCreateSchema>;
 
 export const TaskUpdateSchema = TaskSchema.partial().omit({ createdAt: true, updatedAt: true, createdByUserId: true, tags: true }).merge(z.object({ tags: z.array(TagSchema.pick({ id: true, name: true })).optional() }));
 
+export type TTaskUpdate = z.infer<typeof TaskUpdateSchema>;
+
 export const TaskDeleteSchema = TaskSchema.pick({ id: true });

@@ -3,17 +3,20 @@ import { Input } from "@/components/ui/input";
 import { Dropdown } from "@/components/ui/dropdown";
 import { Button } from "@/components/ui/button";
 import { MultiselectAutocomplete } from '@/components/ui/autocomplete';
-import { type TTaskCreate } from '@/models/task.model';
-import { type TaskPriority, type TaskStatus } from '@prisma/client';
+import { type TTaskUpdate, type TTaskCreate } from '@/models/task.model';
+import { type Tags, type User, type Task, type TaskPriority, type TaskStatus } from '@prisma/client';
 import { type TTagCreate } from '@/models/tags.model';
 import { api } from '@/utils/api';
 import { useSession } from 'next-auth/react';
 import { Textarea } from '@/components/ui/textarea';
-import { DayPicker } from 'react-day-picker';
 
 type Props = {
-  handleSubmit?: (formState: TTaskCreate) => Promise<void>
-  data?: TTaskCreate
+  handleSubmit?: (formState: TTaskUpdate) => Promise<void>
+  data?: Task & {
+    assignedToUser?: User | null,
+    createdByUser?: User | null,
+    tags: Tags[]
+  }
 }
 export function TaskForm({ handleSubmit, data }: Props) {
   const { data: session } = useSession()
@@ -26,7 +29,7 @@ export function TaskForm({ handleSubmit, data }: Props) {
     enabled: session !== null
   })
 
-  const [formState, setFormState] = useState<TTaskCreate>({
+  const [formState, setFormState] = useState<TTaskUpdate>({
     title: "",
     description: "",
     status: "TODO",
@@ -38,7 +41,16 @@ export function TaskForm({ handleSubmit, data }: Props) {
 
   useEffect(() => {
     if (data)
-      setFormState(data)
+      setFormState({
+        id: data.id,
+        title: data.title,
+        description: data.description ?? undefined,
+        status: data.status,
+        priority: data.priority,
+        tags: data.tags ?? [],
+        dueDate: data.dueDate,
+        assignedToUserId: data.assignedToUserId ?? undefined,
+      })
   }, [data])
 
   const handleAddTag = async (value: string) => {
@@ -112,7 +124,7 @@ export function TaskForm({ handleSubmit, data }: Props) {
             label='Tags'
             options={tags?.map((tag) => ({ label: tag.name, value: tag.id })) ?? []}
             placeholder="Select tags..."
-            selectedValues={formState.tags.map((tag) => ({ label: tag.name, value: tag.id }))}
+            selectedValues={formState.tags?.map((tag) => ({ label: tag.name, value: tag.id }))}
             onSelectionChange={(newTags) => setFormState({ ...formState, tags: newTags.map((newTag) => ({ name: newTag.label, id: newTag.value })) })}
             handleNewOption={handleAddTag}
           />
@@ -121,7 +133,7 @@ export function TaskForm({ handleSubmit, data }: Props) {
           <Input
             label="Due Date"
             type="date"
-            value={formState.dueDate.toISOString().split("T")[0]}
+            value={formState.dueDate?.toISOString().split("T")[0]}
             onChange={(e) => setFormState({ ...formState, dueDate: new Date(e.target.value) })}
           />
 
