@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { type TUserCreate } from "@/models/user.model";
+import { type TUserUpdate, type TUserCreate } from "@/models/user.model";
 import { useSession } from 'next-auth/react';
 import { api } from '@/utils/api';
 
@@ -11,7 +11,8 @@ export function UserForm() {
     enabled: session !== null
   });
   const userUpdateMutation = api.user.updateUser.useMutation();
-  const [formState, setFormState] = useState<TUserCreate>({
+  const [formState, setFormState] = useState<TUserUpdate>({
+    id: "",
     email: "",
     name: "",
     avatar: "",
@@ -21,6 +22,7 @@ export function UserForm() {
   useEffect(() => {
     if (user) {
       setFormState({
+        id: user.id,
         email: user.email,
         name: user.name ?? "",
         avatar: user.avatar ?? "",
@@ -34,7 +36,9 @@ export function UserForm() {
     e.preventDefault();
     try {
       await userUpdateMutation.mutateAsync(formState);
+      alert("User updated successfully");
     } catch (error) {
+      alert("Error updating user");
       console.error(error);
     }
   };
@@ -51,6 +55,7 @@ export function UserForm() {
             placeholder="Enter email address"
             type="email"
             required
+            disabled={true}
           />
 
           {/* Name */}
@@ -80,7 +85,7 @@ export function UserForm() {
           />
 
           {/* Submit Button */}
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" disabled={isLoading || userUpdateMutation.isPending}>
             Update
           </Button>
         </form>
